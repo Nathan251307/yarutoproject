@@ -94,9 +94,10 @@
     </script>
     <script>
 
-        const morning = "おはよう、ケイラちゃん 🌤️"
-        const afternoon = "こんにちわ、ケイラちゃん ☀️"
-        const evening = "こんばんわ、ケイラちゃん 🌙"
+        const morning = "おはようございます、ケイラちゃん 🌤️"
+        const afternoon = "こんにちは、ケイラちゃん ☀️"
+        const evening = "こんばんは、ケイラちゃん 🌙"
+        const night = "おやすみ、ケイラちゃん 🌙"
 
         function updateDateTime(){
             const now = new Date();
@@ -113,6 +114,9 @@
             }
             else if(hour >= 15 && hour < 23){
             document.getElementById("introduction").innerHTML = evening
+            }
+            else if(hour >= 23 && hour < 6){
+            document.getElementById("introduction").innerHTML = night
             }
         }
         
