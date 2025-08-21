@@ -33,13 +33,13 @@
             const input = document.getElementById('task-input');
             const taskList = document.getElementById('task-list');
 
-            // Load tasks from localStorage
+            
             let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-            // Render tasks on page load
+           
             renderTasks();
 
-            // Add new task
+      
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const taskText = input.value.trim();
@@ -57,7 +57,7 @@
                 input.value = '';
             });
 
-            // Render all tasks
+            // Render tasks
             function renderTasks() {
                 taskList.innerHTML = '';
                 tasks.forEach(task => {
@@ -68,14 +68,14 @@
                     <button class="delete-btn">Delete</button>
                 `;
                 
-                // Toggle completed status
+                // Toggle status
                 li.querySelector('.task-text').addEventListener('click', () => {
                     task.completed = !task.completed;
                     saveTasks();
                     renderTasks();
                 });
 
-                // Delete task
+                // Delete
                 li.querySelector('.delete-btn').addEventListener('click', () => {
                     tasks = tasks.filter(t => t.id !== task.id);
                     saveTasks();
