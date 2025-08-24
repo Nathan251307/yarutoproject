@@ -115,7 +115,7 @@
             else if(hour >= 15 && hour < 23){
             document.getElementById("introduction").innerHTML = evening
             }
-            else if(hour >= 23 && hour < 6){
+            else {
             document.getElementById("introduction").innerHTML = night
             }
         }
@@ -125,8 +125,6 @@
         updateDateTime();
         setInterval(updateDateTime, 1000);
     
-        updateTime();
-        setInterval(updateTime, 1000)
 
 
     </script>
