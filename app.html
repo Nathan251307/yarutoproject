@@ -10,8 +10,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 </head>
+<style>
+    .delete-btn {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #b92c0d;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: all 0.3 ease;
+        margin-top: 30px;
+        
+    }
+
+    .delete-btn::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 6px;
+        height: 12px;
+        border-right: 2px solid white;
+        
+        border-bottom: 2px solid white;
+        transform: rotate(45deg) scale(0); 
+        transition: transform 0.3s ease;
+    
+    }
+
+    .delete-btn.active {
+        background-color: #b92c0d;  
+    }
+
+    .delete-btn.active::after {
+        transform: rotate(45deg) scale(1);  
+    }
+
+    .task-item.removed {
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 0.5s ease;
+    }
+</style>
 <body style="background-color: #ECDCC3;">
-    <button style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-left: 1350px; margin-top: 10px" onclick="window.location.href='index.html'">Logout</button>
+    <button style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-left: 1350px; margin-top: 10px;" onclick="window.location.href='index.html'">Logout</button>
     <div class="card" style="top: 30px; left: 30px; width: 250px; background-color: #ECDCC3; border-color: #ECDCC3; position: fixed;">
         <div>
             <h3 id="introduction" style="font-family: Sawarabi Gothic;"></h3> <br>
@@ -24,6 +70,8 @@
         <h2 style="font-family: Sawarabi Gothic;">To-Do List</h2>
         <form id="task-form">
             <input type="text" id="task-input" placeholder="Add new task..." required style="font-family: Sawarabi Gothic;">
+            <input type="date" id="task-deadline" style="font-family: Sawarabi Gothic;">
+            <input type="text" id="task-priority" placeholder="Priority (e.g., High, Low)" style="font-family: Sawarabi Gothic;">
             <button type="submit" style="font-family: Sawarabi Gothic; margin-top: 50px; background-color: #b92c0d; color: white;">Add Task</button>
         </form>
         <ul id="task-list"></ul>
@@ -34,6 +82,8 @@
             const form = document.getElementById('task-form');
             const input = document.getElementById('task-input');
             const taskList = document.getElementById('task-list');
+            const deadlineInput = document.getElementById('task-deadline');
+            const priorityInput = document.getElementById('task-priority');
 
             // Load tasks from localStorage
             let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -50,13 +100,17 @@
                 const newTask = {
                 id: Date.now(),
                 text: taskText,
-                completed: false
+                priority: priorityInput.value,
+                completed: false,
+                deadline: deadlineInput.value || null
                 };
 
                 tasks.push(newTask);
                 saveTasks();
                 renderTasks();
                 input.value = '';
+                priorityInput.value = '';
+                deadlineInput.value = '';
             });
 
             // Render all tasks
@@ -65,9 +119,13 @@
                 tasks.forEach(task => {
                 const li = document.createElement('li');
                 li.className = 'task-item';
+
+                
                 li.innerHTML = `
                     <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
-                    <button class="delete-btn">Delete</button>
+                    ${task.deadline ? `<span class="task-deadline"> (Due: ${task.deadline})</span>` : ''}
+                    ${task.priority ? `<span class="task-priority"> [${task.priority}]</span>` : ''}
+                    <button class="delete-btn"></button>
                 `;
                 
                 // Toggle completed status
@@ -78,11 +136,19 @@
                 });
 
                 // Delete task
-                li.querySelector('.delete-btn').addEventListener('click', () => {
-                    tasks = tasks.filter(t => t.id !== task.id);
-                    saveTasks();
-                    renderTasks();
-                });
+                li.querySelector('.delete-btn').addEventListener('click', (e) => {
+                    const btn = e.target;
+                    btn.classList.add('active');
+
+                    setTimeout(() => {
+                        li.classList.add('removed'); 
+                            setTimeout(() => {
+                                tasks = tasks.filter(t => t.id !== task.id);
+                                saveTasks();
+                                renderTasks();
+                            }, 500); 
+                        }, 300);
+                    });
 
                 taskList.appendChild(li);
                 });
