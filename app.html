@@ -63,7 +63,12 @@
             <h3 id="introduction" style="font-family: Sawarabi Gothic;"></h3> <br>
             <h4 style="font-family: Sawarabi Gothic">It is currently:</h4>
             <h3 class="clock", id="current-time" style="font-family: Sawarabi Gothic;"></h3>
-            
+            <br> 
+            <br>
+            <h5 class="card" style="background-color: #b92c0d; color: white; font-family: Sawarabi Gothic;">Pomodoro Focus Timer :3</h5>
+            <h4 id="timer" style="font-family: Sawarabi Gothic; font-size: 30px; margin-top: 10px;">50:00</h4>
+            <button id="start-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Start</button>
+            <button id="reset-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Reset</button>
         </div>
     </div>
     <div class="container d-flex" style="align-items: center; justify-content: center; flex-direction: column; margin-top: 50px;">
@@ -77,6 +82,46 @@
         <ul id="task-list"></ul>
     </div>
 
+  
+
+
+    <script>
+        let countdown;
+        let time = 50 * 60;
+
+        const timerElement = document.getElementById('timer');
+        const startButton = document.getElementById('start-timer');
+        const resetButton = document.getElementById('reset-timer');
+
+        startButton.addEventListener('click', () => {
+            time = 50 * 60;
+            startButton.disabled = true;
+
+            countdown = setInterval(() => {
+                const minutes = Math.floor(time / 60);
+                const seconds = time % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                time--;
+
+                if(time < 0 ) {
+                    clearInterval(countdown);
+                    timerElement.textContent = "Time's up!";
+                    startButton.disabled = false;
+                    alert("Pomodoro session complete!");
+
+                }
+            }, 1000)
+        });
+
+        resetButton.addEventListener('click', () => {
+            clearInterval(countdown);
+            time = 50 * 60;
+            timerElement.textContent = "50:00";
+            startButton.disabled = false;
+        });
+    </script>
+
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('task-form');
