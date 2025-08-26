@@ -1,265 +1,103 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App | Yaruto</title>
-    <link rel="icon" type="image" href="logoyarutofavi.png">
+    <title>Login | Yaruto</title>
+    <link rel="icon" type="image/png" href="images/logoyarutofavi.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 </head>
 <style>
-    .delete-btn {
-        width: 24px;
-        height: 24px;
-        border: 2px solid #b92c0d;
-        border-radius: 50%;
-        background: transparent;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        transition: all 0.3 ease;
-        margin-top: 30px;
-        
+    .typing-container {
+        font-family: monospace;
+        font-size: 17px;
     }
-
-    .delete-btn::after {
-        content: "";
-        position: absolute;
-        left: 6px;
-        top: 2px;
-        width: 6px;
-        height: 12px;
-        border-right: 2px solid white;
-        
-        border-bottom: 2px solid white;
-        transform: rotate(45deg) scale(0); 
-        transition: transform 0.3s ease;
+    .cursor {
+        animation: blink 0.7s infinite
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1;}
+        50% { opacity: 0;}
+    }
+   
     
-    }
-
-    .delete-btn.active {
-        background-color: #b92c0d;  
-    }
-
-    .delete-btn.active::after {
-        transform: rotate(45deg) scale(1);  
-    }
-
-    .task-item.removed {
-        opacity: 0;
-        transform: translateX(-50px);
-        transition: all 0.5s ease;
-    }
 </style>
-<body style="background-color: #ECDCC3;">
-    <button style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-left: 1350px; margin-top: 10px;" onclick="window.location.href='index.html'">Logout</button>
-    <div class="card" style="top: 30px; left: 30px; width: 250px; background-color: #ECDCC3; border-color: #ECDCC3; position: fixed;">
-        <div>
-            <h3 id="introduction" style="font-family: Sawarabi Gothic;"></h3> <br>
-            <h4 style="font-family: Sawarabi Gothic">It is currently:</h4>
-            <h3 class="clock", id="current-time" style="font-family: Sawarabi Gothic;"></h3>
-            <br> 
-            <br>
-            <h5 class="card" style="background-color: #b92c0d; color: white; font-family: Sawarabi Gothic;">Pomodoro Focus Timer :3</h5>
-            <h4 id="timer" style="font-family: Sawarabi Gothic; font-size: 30px; margin-top: 10px;">50:00</h4>
-            <button id="start-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Start</button>
-            <button id="reset-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Reset</button>
+<body style="background-color: #f8f6ef;">
+    <div class="container-fluid d-flex" width="250px" height="75px" style="border-color: #f8f6ef; background-color: #f8f6ef;">
+        <img src="images/logoyaruto.png" width="100px" height="100px"  style="margin-left: 45px;">
+        <h4 style="font-family: 'Sawarabi Gothic', sans-serif; margin-top: 34px; margin-left: 5px; color: #b92c0d">Yaruto</h4>
+    </div>
+    <div style="position: relative;">
+        <div style=" position: absolute ;border-color: #f8f6ef;">
+            <div class="col-auto card border-secondary mb-3 w-100" style="margin-left: 20px; border-color: #f8f6ef; background-color: #f8f6ef;">
+                <div class="typing-container" style="border-color: #f8f6ef; width: 270px;">
+                    <span id="typing-text"></span>
+                        <span class="cursor">|</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center vh-75" style="position: relative; align-items: center; justify-content: center; margin-top: 150px;">
+            <div class="card" style="background-color: #f8f6ef ; width: 400px; border-color: #000000;">
+                <div class="card-body">
+                    <form onsubmit="return passCheck()" href="loading.html">
+                        <div class="mb-3" style="font-family: Sawarabi Gothic;">
+                            <label class="form-label" style="color: rgb(0, 0, 0);">Username</label>
+                            <input id="name" type="name" name="name" class="form-control" style="background-color: #f8f6ef; color: rgb(0, 0, 0);">
+                        </div>
+                        <div class="mb-3" style="font-family: Sawarabi Gothic;">
+                            <label class="form-label" style="color: rgb(0, 0, 0);">Password</label>
+                            <input id="password" type="password" name="password" class="form-control" style="background-color: #f8f6ef; color: rgb(0, 0, 0);">
+                        </div>
+                        <div class="d-grid gap-2" style="font-family: Sawarabi Gothic;">
+                            <button style="background-color: #b92c0d; color: white;">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="container d-flex" style="align-items: center; justify-content: center; flex-direction: column; margin-top: 50px;">
-        <h2 style="font-family: Sawarabi Gothic;">To-Do List</h2>
-        <form id="task-form">
-            <input type="text" id="task-input" placeholder="Add new task..." required style="font-family: Sawarabi Gothic;">
-            <input type="date" id="task-deadline" style="font-family: Sawarabi Gothic;">
-            <input type="text" id="task-priority" placeholder="Priority (e.g., High, Low)" style="font-family: Sawarabi Gothic;">
-            <button type="submit" style="font-family: Sawarabi Gothic; margin-top: 50px; background-color: #b92c0d; color: white;">Add Task</button>
-        </form>
-        <ul id="task-list"></ul>
+    <div class="card" style="background-color: #efeae2 ; border-radius: 0; border-color: #f8f6ef ; height: 57px; margin-top: 225px;" >
+        <h6 style="margin-top:11px; font-family: Sawarabi Gothic;">Developed by yours truly ❤️ </h6>
+        <h6 style="margin-top: -10px; font-family: Sawarabi Gothic;">v: 1.00</h6>
     </div>
-
-  
-
-
     <script>
-        let countdown;
-        let time = 50 * 60;
-
-        const timerElement = document.getElementById('timer');
-        const startButton = document.getElementById('start-timer');
-        const resetButton = document.getElementById('reset-timer');
-
-        startButton.addEventListener('click', () => {
-            time = 50 * 60;
-            startButton.disabled = true;
-
-            countdown = setInterval(() => {
-                const minutes = Math.floor(time / 60);
-                const seconds = time % 60;
-                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                time--;
-
-                if(time < 0 ) {
-                    clearInterval(countdown);
-                    timerElement.textContent = "Time's up!";
-                    startButton.disabled = false;
-                    alert("Pomodoro session complete!");
-
-                }
-            }, 1000)
-        });
-
-        resetButton.addEventListener('click', () => {
-            clearInterval(countdown);
-            time = 50 * 60;
-            timerElement.textContent = "50:00";
-            startButton.disabled = false;
-        });
-    </script>
-
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('task-form');
-            const input = document.getElementById('task-input');
-            const taskList = document.getElementById('task-list');
-            const deadlineInput = document.getElementById('task-deadline');
-            const priorityInput = document.getElementById('task-priority');
-
-            // Load tasks from localStorage
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-            // Render tasks on page load
-            renderTasks();
-
-            // Add new task
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const taskText = input.value.trim();
-                if (taskText === '') return;
-
-                const newTask = {
-                id: Date.now(),
-                text: taskText,
-                priority: priorityInput.value,
-                completed: false,
-                deadline: deadlineInput.value || null
-                };
-
-                tasks.push(newTask);
-                saveTasks();
-                renderTasks();
-                input.value = '';
-                priorityInput.value = '';
-                deadlineInput.value = '';
-            });
-
-            // Render all tasks
-            function renderTasks() {
-                taskList.innerHTML = '';
-                tasks.forEach(task => {
-                const li = document.createElement('li');
-                li.className = 'task-item';
-
-                
-                li.innerHTML = `
-                    <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
-                    ${task.deadline ? `<span class="task-deadline"> (Due: ${task.deadline})</span>` : ''}
-                    ${task.priority ? `<span class="task-priority"> [${task.priority}]</span>` : ''}
-                    <button class="delete-btn"></button>
-                `;
-                
-                // Toggle completed status
-                li.querySelector('.task-text').addEventListener('click', () => {
-                    task.completed = !task.completed;
-                    saveTasks();
-                    renderTasks();
-                });
-
-                // Delete task
-                li.querySelector('.delete-btn').addEventListener('click', (e) => {
-                    const btn = e.target;
-                    btn.classList.add('active');
-
-                    setTimeout(() => {
-                        li.classList.add('removed'); 
-                            setTimeout(() => {
-                                tasks = tasks.filter(t => t.id !== task.id);
-                                saveTasks();
-                                renderTasks();
-                            }, 500); 
-                        }, 300);
-                    });
-
-                taskList.appendChild(li);
-                });
-            }
-
-            // Save tasks to localStorage
-            function saveTasks() {
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            }
-        });
-    </script>
-    <script>
-
-        const morning = "おはよう、ケイラちゃん 🌤️"
-        const afternoon = "こんにちわ、ケイラちゃん ☀️"
-        const evening = "こんばんわ、ケイラちゃん 🌙"
-        const night = "おやすみ、ケイラちゃん 🌙"
-
-        function updateDateTime(){
-            const now = new Date();
-            const options = {weekday:'long' , month:'long', day:'numeric', year:'numeric', 
-            hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true}
-        
-            document.getElementById("current-time").textContent = now.toLocaleDateString('en-US',options)
-            const hour = now.getHours();
-            if(hour >= 6 && hour < 11){
-            document.getElementById("introduction").innerHTML = morning
-            }
-            else if(hour >= 11 && hour < 15){
-            document.getElementById("introduction").innerHTML = afternoon
-            }
-            else if(hour >= 15 && hour < 23){
-            document.getElementById("introduction").innerHTML = evening
-            }
-            else {
-            document.getElementById("introduction").innerHTML = night
+        function passCheck() {
+            const username = document.getElementById("name").value.trim();
+            const password = document.getElementById("password").value.trim();
+            if(username === "keirarl" && password === "kei060121"){         //Password set here
+                window.location.href = "app.html";
+                return false;
+            } else {
+                alert("Invalid username or password");
+                return false;
             }
         }
         
-            
+    </script>
+    <script>
+        const text = "やると (Ya Ru To) is the Japanese translation of 'Do it', signifying the concept of taking action and getting things done.";
         
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
+        const typingElement = document.getElementById("typing-text");
+        
+        let i = 0;
 
+        function typeWriter(){
+            if (i < text.length) {
+                typingElement.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 40); 
+            } else {
 
+            }
+        }
+
+        window.onload = typeWriter;
     </script>
     
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>
