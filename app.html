@@ -11,6 +11,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 </head>
 <style>
+
+    .time-input {
+        width: 60px;
+        margin-right: 10px;
+        text-align: center;
+        font-family: Sawarabi Gothic;
+    }
+
+    .timer-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .custom-time {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+    }
     .delete-btn {
         width: 24px;
         height: 24px;
@@ -67,15 +87,20 @@
             <br>
             <h5 class="card" style="background-color: #b92c0d; color: white; font-family: Sawarabi Gothic;">Pomodoro Focus Timer :3</h5>
             <h4 id="timer" style="font-family: Sawarabi Gothic; font-size: 30px; margin-top: 10px;">50:00</h4>
-            <button id="start-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Start</button>
-            <button id="reset-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white; margin-top: 10px;">Reset</button>
+            <div class="timer-controls">
+                <div class="custom-time">
+                    <input type="number" id="custom-minutes" class="time-input" min="1" max="120" value="50">
+                    <span style="font-family: Sawarabi Gothic;">minutes</span>
+                </div>
+                <button id="start-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white;">Start</button>
+                <button id="reset-timer" style="font-family: Sawarabi Gothic; background-color: #b92c0d; color: white;">Reset</button>
+            </div>
         </div>
     </div>
     <div class="container d-flex" style="align-items: center; justify-content: center; flex-direction: column; margin-top: 50px;">
-        <h2 style="font-family: Sawarabi Gothic;">To-Do List</h2>
+        <h2 style="font-family: Sawarabi Gothic;">Session To-Do List</h2>
         <form id="task-form">
             <input type="text" id="task-input" placeholder="Add new task..." required style="font-family: Sawarabi Gothic;">
-            <input type="date" id="task-deadline" style="font-family: Sawarabi Gothic;">
             <input type="text" id="task-priority" placeholder="Priority (e.g., High, Low)" style="font-family: Sawarabi Gothic;">
             <button type="submit" style="font-family: Sawarabi Gothic; margin-top: 50px; background-color: #b92c0d; color: white;">Add Task</button>
         </form>
@@ -88,39 +113,81 @@
     <script>
         let countdown;
         let time = 50 * 60;
+        let expected;
 
         const timerElement = document.getElementById('timer');
         const startButton = document.getElementById('start-timer');
         const resetButton = document.getElementById('reset-timer');
+        const customMinutesInput = document.getElementById('custom-minutes');
 
-        startButton.addEventListener('click', () => {
-            time = 50 * 60;
+        function updateDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            // Get custom time if set
+            const customMinutes = parseInt(customMinutesInput.value);
+            if (customMinutes && customMinutes > 0) {
+                time = customMinutes * 60;
+            } else {
+                time = 50 * 60; // Default to 50 minutes
+            }
+            
+            updateDisplay(time);
             startButton.disabled = true;
 
-            countdown = setInterval(() => {
-                const minutes = Math.floor(time / 60);
-                const seconds = time % 60;
-                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            expected = Date.now() + 1000;
+            
+            countdown = setTimeout(function tick() {
+                const drift = Date.now() - expected;
+                
                 time--;
+                updateDisplay(time);
 
-                if(time < 0 ) {
-                    clearInterval(countdown);
-                    timerElement.textContent = "Time's up!";
+                if (time <= 0) {
+                    clearTimeout(countdown);
+                    timerElement.textContent = "00:00";
                     startButton.disabled = false;
-                    alert("Pomodoro session complete!");
-
+                    
+                    // Play completion sound
+                    try {
+                        const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+                        audio.play();
+                    } catch (e) {
+                        console.log('Audio notification error', e);
+                    }
+                    
+                    alert("Pomodoro Session Completed");
+                } else {
+                    expected += 1000;
+                    countdown = setTimeout(tick, Math.max(0, 1000 - drift));
                 }
-            }, 1000)
-        });
+            }, 1000);
+        }
 
-        resetButton.addEventListener('click', () => {
-            clearInterval(countdown);
-            time = 50 * 60;
-            timerElement.textContent = "50:00";
+        function resetTimer() {
+            clearTimeout(countdown);
+            
+            // Get custom time if set
+            const customMinutes = parseInt(customMinutesInput.value);
+            if (customMinutes && customMinutes > 0) {
+                time = customMinutes * 60;
+            } else {
+                time = 50 * 60; // Default to 50 minutes
+            }
+            
+            updateDisplay(time);
             startButton.disabled = false;
-        });
-    </script>
+        }
 
+        startButton.addEventListener('click', startTimer);
+        resetButton.addEventListener('click', resetTimer);
+
+        // Initialize display
+        updateDisplay(time);
+    </script>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -130,10 +197,10 @@
             const deadlineInput = document.getElementById('task-deadline');
             const priorityInput = document.getElementById('task-priority');
 
-            // Load tasks from localStorage
+            
             let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-            // Render tasks on page load
+            
             renderTasks();
 
             // Add new task
@@ -241,22 +308,6 @@
 
     </script>
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
