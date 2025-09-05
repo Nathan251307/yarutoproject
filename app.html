@@ -194,7 +194,6 @@
             const form = document.getElementById('task-form');
             const input = document.getElementById('task-input');
             const taskList = document.getElementById('task-list');
-            const deadlineInput = document.getElementById('task-deadline');
             const priorityInput = document.getElementById('task-priority');
 
             
@@ -214,7 +213,6 @@
                 text: taskText,
                 priority: priorityInput.value,
                 completed: false,
-                deadline: deadlineInput.value || null
                 };
 
                 tasks.push(newTask);
@@ -222,7 +220,6 @@
                 renderTasks();
                 input.value = '';
                 priorityInput.value = '';
-                deadlineInput.value = '';
             });
 
             // Render all tasks
